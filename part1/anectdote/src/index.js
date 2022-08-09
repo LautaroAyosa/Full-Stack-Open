@@ -25,7 +25,7 @@ const App = (props) => {
       <div>
         <h1>Anecdote of the day</h1>
         <div>
-          {anecdotes[selected]}
+          {props.anecdotes[selected]}
           <p>Has {points[selected]} votes</p>
         </div>
         <div>
@@ -36,7 +36,7 @@ const App = (props) => {
       <div>
         <h1>Anecdote with most votes</h1>
         <div>
-          {anecdotes[index]}
+          {props.anecdotes[index]}
           <p>Has {points[index]} votes</p>
         </div>
       </div>
@@ -53,4 +53,4 @@ const anecdotes = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+ReactDOM.createRoot(document.getElementById('root')).render(<App anecdotes={anecdotes} />)
