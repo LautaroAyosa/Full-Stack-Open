@@ -1,7 +1,7 @@
 const Part = ( props ) => {
     
     return (
-        <p>{props.name} {props.exercises}</p>
+        <p key={props.i}>{props.name} {props.exercises}</p>
     )
 }
 

@@ -4,8 +4,8 @@ const Content = ( props ) => {
     
     return (
         <div>
-            {props.parts.map(part => {
-                return <Part name={part.name} exercises={part.exercises} />
+            {props.parts.map((part, i) => {
+                return <Part key={i} name={part.name} exercises={part.exercises} />
             })}
         </div>
     )
