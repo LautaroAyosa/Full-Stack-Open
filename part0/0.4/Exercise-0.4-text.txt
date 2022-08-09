@@ -1,0 +1,14 @@
+Browser->Server: HTTP POST method to /exampleapp/new_note
+note over Server: Server adds the new Note to the Notes array
+Server-->Browser: Redirect to /exampleapp/notes
+Browser->Server: HTTP GET /exampleapp/notes
+Server-->Browser: HTML Code
+Browser->Server: HTTP GET /exampleapp/main.css
+Server-->Browser: main.css
+Browser->Server: HTTP GET /exampleapp/main.js
+Server-->Browser: main.js
+note over Browser: Browser executes the JS code and request the data.json file
+Browser->Server: HTTP Get /exampleapp/data.json
+Server-->Browser: data.json  [{"content":"hola","date":"2022-08-09T14:42:14.168Z"}, ... ]
+Browser->Server: HTTP Get /favicon.ico
+Server-->Browser: favicon.ico

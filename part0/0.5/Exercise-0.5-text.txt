@@ -1,0 +1,12 @@
+Browser->Server: HTTP GET /exampleapp/spa
+Server-->Browser: HTML Code
+Browser->Server: HTTP GET /exampleapp/main.css
+Server-->Browser: main.css
+Browser->Server: HTTP GET /exampleapp/spa.js
+Server-->Browser: main.js
+note over Browser: Browser executes the JS code and request the data.json file.
+Browser->Server: HTTP Get /exampleapp/data.json
+Server-->Browser: data.json [{"content":"another derp","date":"2022-08-09T14:48:50.968Z"}, ... ]
+note over Browser: The Browser executes the Event Handler that renders all notes on the data.json file.
+Browser->Server: HTTP Get /favicon.ico
+Server-->Browser: favicon.ico
