@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 
 const App = (props) => {
   const [selected, setSelected] = useState(0);
@@ -7,7 +7,6 @@ const App = (props) => {
 
   const max = Math.max(...points);
   const index = points.indexOf(max);
-  console.log(index);
 
   function votes () {
     let pointsCopy = [ ...points ];
@@ -26,7 +25,7 @@ const App = (props) => {
       <div>
         <h1>Anecdote of the day</h1>
         <div>
-          {props.anecdotes[selected]}
+          {anecdotes[selected]}
           <p>Has {points[selected]} votes</p>
         </div>
         <div>
@@ -37,7 +36,7 @@ const App = (props) => {
       <div>
         <h1>Anecdote with most votes</h1>
         <div>
-          {props.anecdotes[index]}
+          {anecdotes[index]}
           <p>Has {points[index]} votes</p>
         </div>
       </div>
@@ -54,7 +53,4 @@ const anecdotes = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
-ReactDOM.render(
-  <App anecdotes={anecdotes} />,
-  document.getElementById('root')
-)
+ReactDOM.createRoot(document.getElementById('root')).render(<App />)
