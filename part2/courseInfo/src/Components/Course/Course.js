@@ -10,7 +10,7 @@ const Course = ( props ) => {
         <div>
             {props.courses.map(course => {
                 return (
-                    <div>
+                    <div key={course.id}>
                         <Header course={course} />
                         <Content course={course} />
                         <Total course={course} />
