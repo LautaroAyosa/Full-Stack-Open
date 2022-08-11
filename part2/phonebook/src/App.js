@@ -13,7 +13,7 @@ const App = () => {
   ])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [ showAll, setShowAll ] = useState(true);
+  const [ filter, setFilter ] = useState('');
 
   // Submit Handler
   function handleSubmit(event) {
@@ -47,11 +47,22 @@ const App = () => {
   function handleNumberChange(event) {
     setNewNumber(event.target.value);
   }
+  function handleFilterChange(event) {
+    setFilter(event.target.value);
+  }
+
+  function personsToShow () {
+    console.log(persons.filter(person => person.name.toLowerCase === filter.toLowerCase))
+  }
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <Filter />
+      <Filter
+        label={"Filter shown with"}
+        filter={filter}
+        handleFilterChange={handleFilterChange}
+      />
       <div>
         <h3>Add a new number to the Phone Book</h3>
         <PersonForm 
@@ -63,7 +74,12 @@ const App = () => {
         />
       </div>
       <h3>Numbers</h3>
-      <Persons persons={persons} />
+      {filter}
+      {personsToShow()}
+      <Persons 
+        filter={filter}
+        personsToShow={personsToShow}
+        persons={persons} />
     </div>
   )
 }
