@@ -52,7 +52,7 @@ const App = () => {
   }
 
   function personsToShow () {
-    console.log(persons.filter(person => person.name.toLowerCase === filter.toLowerCase))
+    
   }
 
   return (
@@ -74,8 +74,6 @@ const App = () => {
         />
       </div>
       <h3>Numbers</h3>
-      {filter}
-      {personsToShow()}
       <Persons 
         filter={filter}
         personsToShow={personsToShow}
