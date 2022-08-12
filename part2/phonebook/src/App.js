@@ -51,10 +51,6 @@ const App = () => {
     setFilter(event.target.value);
   }
 
-  function personsToShow () {
-    
-  }
-
   return (
     <div>
       <h1>Phonebook</h1>
@@ -76,7 +72,6 @@ const App = () => {
       <h3>Numbers</h3>
       <Persons 
         filter={filter}
-        personsToShow={personsToShow}
         persons={persons} />
     </div>
   )
