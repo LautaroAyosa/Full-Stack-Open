@@ -5,9 +5,9 @@ function Country(props) {
     
 
     return (
-        <div>
-            
-        </div>
+        <li>
+            {props.country.name}
+        </li>
     );
 }
 
