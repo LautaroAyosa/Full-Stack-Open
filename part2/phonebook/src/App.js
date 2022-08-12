@@ -6,7 +6,7 @@ import Filter from './Components/Filter/Filter';
 import PersonForm from './Components/PersonForm/PersonForm';
 
 const App = () => {
-  const [persons, setPersons] = useState([])
+  const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('');
@@ -22,19 +22,29 @@ const App = () => {
   // Submit Handler
   function handleSubmit(event) {
     event.preventDefault();
+    
     // If the name or the number are empty, send an Alert
     if (newName !== "" && newNumber !== "") {
+      
       // Verify if the value is already in the name or number is already in the phonebook
       if ( persons.some(person => person.name.toLowerCase() === newName.toLowerCase()) || persons.some(person => person.number.toLowerCase() === newNumber.toLowerCase()) ) {
+        
         alert(`The name: ${newName} or the Number: ${newNumber} is already on the Phone Book`)
+
         // Clear input Fields
         setNewName("");
         setNewNumber("");
       } else {
-        setPersons(persons.concat({
+
+        // POST new Person to the db
+        axios
+          .post('http://localhost:3001/persons', {
           name: newName,
           number: newNumber
-        }));
+        }).then ((response) => {
+          setPersons(persons.concat(response.data));
+        });
+        
         // Clear input Fields
         setNewName("");
         setNewNumber("");
