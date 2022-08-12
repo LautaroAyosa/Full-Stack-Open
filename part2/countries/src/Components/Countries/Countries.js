@@ -1,5 +1,6 @@
 import React from 'react'
 import Country from './Country/Country';
+import SingleCountry from './SingleCountry/SingleCountry'
 
 function Countries(props) {
 
@@ -17,10 +18,13 @@ function Countries(props) {
 
     return (
         <ul>
-            { filteredData.length <= 10 ? 
-                filteredData.map( (country, i) => {
-                return <Country key={i} country={country} />
-                }) : "Too many matches, please be more specific"
+            { filteredData.length > 10 ? 
+                "Too many matches, please be more specific" :
+                filteredData.length === 1 ?
+                    <SingleCountry country={filteredData[0]} /> :
+                    filteredData.map( (country, i) => {
+                        return <Country key={i} country={country} />
+                    })
             }
         </ul>
         
