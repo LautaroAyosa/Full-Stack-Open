@@ -1,4 +1,5 @@
 import React from 'react';
+import Person from './Person/Person';
 
 const Persons = (props) => {
 
@@ -21,7 +22,7 @@ const Persons = (props) => {
 
     return (
         <ul>
-            {filteredData.map((person, i) => <li key={i}>{person.name} {person.number}</li>)}
+            {filteredData.map((person, i) => <Person id={i} name={person.name} number={person.number} />)}
         </ul>
     )
 }
