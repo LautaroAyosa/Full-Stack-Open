@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import "./App.css";
 
 import Filter from './Components/Filter/Filter';
 import Countries from './Components/Countries/Countries';
@@ -19,7 +20,8 @@ function App() {
   return (
     <div >
       <Filter label="Find Countries" filter={filter} setFilter={setFilter} />
-      <Countries countries={countries} filter={filter} />
+      { countries != 0 ? <Countries countries={countries} filter={filter} /> : <p>Loading...</p>}
+      
     </div>
   );
 }
