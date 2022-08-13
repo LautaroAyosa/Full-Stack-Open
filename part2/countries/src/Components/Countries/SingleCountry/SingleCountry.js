@@ -34,7 +34,7 @@ function SingleCountry(props) {
                 { weather.length !== 0 ? 
                     <div>
                         <h3>Weather in {props.country.capital}</h3>
-                        <p style={{display: "flex", alignItems: "center"}}><img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}.png`} alt="Weather Icon" /> {weather.weather[0].description}</p>
+                        <p style={{display: "flex", alignItems: "center", textTransform: "capitalize"}}><img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}.png`} alt="Weather Icon" /> {weather.weather[0].description}</p>
                         <p>Temperature: {Math.round(weather.main.temp - 273.15)}°C</p>
                         <h4>Wind: </h4>
                         <p>Speed: { Math.round(weather.wind.speed * 3.6)} km/h</p>
