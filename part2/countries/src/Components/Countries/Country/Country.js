@@ -9,12 +9,12 @@ function Country(props) {
     }
 
     return (
-        <li styles="display: flex;">
-        <button onClick={handleClick}>{isOpen ? "Hide" : "Show"}</button>
-        { isOpen ? 
-            <SingleCountry country={props.country} />
-            : <p>{props.country.name}</p> 
-        }
+        <li style={{display: "flex", margin: "10px 5px"}}>
+            <button onClick={handleClick} style={{maxHeight: "28px", width: "48px", marginRight: "10px"}}>{isOpen ? "Hide" : "Show"}</button>
+            { isOpen ? 
+                <SingleCountry country={props.country} />
+                : <p>{props.country.name}</p> 
+            }
         </li>
     );
 }
