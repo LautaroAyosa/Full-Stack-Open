@@ -20,7 +20,7 @@ function App() {
   return (
     <div >
       <Filter label="Find Countries" filter={filter} setFilter={setFilter} />
-      { countries != 0 ? <Countries countries={countries} filter={filter} /> : <p>Loading...</p>}
+      { countries !== 0 ? <Countries countries={countries} filter={filter} /> : <p>Loading...</p>}
       
     </div>
   );

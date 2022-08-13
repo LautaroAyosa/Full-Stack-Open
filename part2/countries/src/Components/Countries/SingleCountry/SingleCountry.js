@@ -5,7 +5,8 @@ const apiKey = process.env.REACT_APP_API_KEY;
 
 function SingleCountry(props) {
     const [ weather, setWeather ] = useState([]);
-    const direction = ['North','North East', 'East','South East', 'South','South West', 'West','North west']
+    const direction = ['North','North East', 'East','South East', 'South','South West', 'West','North west'];
+
     useEffect(() => {
         if (props.country.capital) {
             axios
@@ -14,6 +15,7 @@ function SingleCountry(props) {
                     setWeather(response.data);
                 })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
     
     return (
