@@ -6,12 +6,17 @@ import phonebookService from './services/phonebook';
 import Persons from './Components/Persons/Persons';
 import Filter from './Components/Filter/Filter';
 import PersonForm from './Components/PersonForm/PersonForm';
+import Notification from './Components/Notification/Notification';
+
+import './App.css'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('');
+  const [ message, setMessage ] = useState("");
+  const [ isError, setIsError ] = useState(false);
 
   useEffect(() => {
     phonebookService
@@ -38,8 +43,24 @@ const App = () => {
         phonebookService
           .createPerson(newName, newNumber)
           .then(response => {
-            setPersons(persons.concat(response.data))
+            setPersons(persons.concat(response.data));
+            setMessage(`Added ${newName} successfuly`)
+            setTimeout(() => {
+              setMessage("")
+            }, 5000)
+            // Clear input Fields
+            setNewName("");
+            setNewNumber("");
           })
+          .catch(error => {
+            setMessage(
+                `Error while creating ${newName}`
+            )
+            setIsError(true)
+            setTimeout(() => {
+              setMessage("")
+            }, 5000)
+        })
         
       }
     } else {
@@ -58,10 +79,23 @@ const App = () => {
           .getAll()
           .then(response => {
             setPersons(response.data);
+            setMessage(`Updated ${newName}'s number to ${newNumber} successfuly`)
+            setTimeout(() => {
+              setMessage("")
+            }, 5000)
           })
         // Clear input Fields
         setNewName("");
         setNewNumber("");
+      })
+      .catch(error => {
+        setMessage(
+            `Information of ${newName} has already been removed from the server`
+        )
+        setIsError(true)
+        setTimeout(() => {
+          setMessage("")
+        }, 5000)
       })
   }
 
@@ -70,11 +104,24 @@ const App = () => {
       phonebookService
         .deletePerson(e.target.value)
         .then(response => {
+          setMessage(`Removed number from the phonebook successfuly`)
+          setTimeout(() => {
+            setMessage("")
+          }, 5000)
           phonebookService
             .getAll()
             .then(response => {
               setPersons(response.data);
             })
+        })
+        .catch(error => {
+          setMessage(
+              `${newName} has already been deleted`
+          )
+          setIsError(true)
+          setTimeout(() => {
+            setMessage("")
+          }, 5000)
         })
     }
   }
@@ -93,6 +140,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} isError={isError} />
       <Filter
         label={"Filter shown with"}
         filter={filter}

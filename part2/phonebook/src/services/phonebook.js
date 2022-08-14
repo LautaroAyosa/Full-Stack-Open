@@ -29,9 +29,6 @@ const deletePerson = (id) => {
 const updatePerson = (id, name, number) => {
     return axios
         .put(baseUrl + id, {name: name, number: number} )
-        .catch(error => {
-            console.log(error)
-        })
 }
 
 
