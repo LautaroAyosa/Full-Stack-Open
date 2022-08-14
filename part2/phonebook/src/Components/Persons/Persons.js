@@ -22,7 +22,7 @@ const Persons = (props) => {
 
     return (
         <ul>
-            {filteredData.map((person, i) => <Person key={i} name={person.name} number={person.number} />)}
+            {filteredData.map((person, i) => <Person key={i} id={person.id} name={person.name} number={person.number} handleRemove={props.handleRemove} />)}
         </ul>
     )
 }
