@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+
+// Services
+import phonebookService from './services/phonebook';
 
 import Persons from './Components/Persons/Persons';
 import Filter from './Components/Filter/Filter';
@@ -12,8 +14,8 @@ const App = () => {
   const [ filter, setFilter ] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
+    phonebookService
+      .getAll()
       .then(response => {
         setPersons(response.data);
       })
@@ -35,22 +37,30 @@ const App = () => {
         setNewName("");
         setNewNumber("");
       } else {
-
         // POST new Person to the db
-        axios
-          .post('http://localhost:3001/persons', {
-          name: newName,
-          number: newNumber
-        }).then ((response) => {
-          setPersons(persons.concat(response.data));
-        });
+        phonebookService
+          .createPerson(newName, newNumber)
+          .then(response => {
+            setPersons(persons.concat(response.data))
+          })
         
-        // Clear input Fields
-        setNewName("");
-        setNewNumber("");
       }
     } else {
       alert("You need to complete all values to be able to add it to the phonebook")
+    }
+  }
+
+  function handleRemove (e) {
+    if (window.confirm("Do you really want to delete that number?")) {
+      phonebookService
+        .deletePerson(e.target.value)
+        .then(response => {
+          phonebookService
+            .getAll()
+            .then(response => {
+              setPersons(response.data);
+            })
+        })
     }
   }
 
@@ -86,7 +96,9 @@ const App = () => {
       <h3>Numbers</h3>
       <Persons 
         filter={filter}
-        persons={persons} />
+        persons={persons}
+        handleRemove={handleRemove}
+      />
     </div>
   )
 }
