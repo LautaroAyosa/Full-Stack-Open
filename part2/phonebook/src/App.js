@@ -22,20 +22,17 @@ const App = () => {
   },[])
 
   // Submit Handler
-  function handleSubmit(event) {
-    event.preventDefault();
+  function handleSubmit(e) {
+    e.preventDefault();
     
     // If the name or the number are empty, send an Alert
     if (newName !== "" && newNumber !== "") {
       
-      // Verify if the value is already in the name or number is already in the phonebook
-      if ( persons.some(person => person.name.toLowerCase() === newName.toLowerCase()) || persons.some(person => person.number.toLowerCase() === newNumber.toLowerCase()) ) {
-        
-        alert(`The name: ${newName} or the Number: ${newNumber} is already on the Phone Book`)
-
-        // Clear input Fields
-        setNewName("");
-        setNewNumber("");
+      // Verify if the name is already in the phonebook
+      if ( persons.some(person => person.name.toLowerCase() === newName.toLowerCase())  ) {
+        if (window.confirm(`The name: ${newName} is already on the PhoneBook, do you want to replace the old number with a new one?`)) {
+          updatePerson(newName, newNumber)
+        }
       } else {
         // POST new Person to the db
         phonebookService
@@ -48,6 +45,24 @@ const App = () => {
     } else {
       alert("You need to complete all values to be able to add it to the phonebook")
     }
+  }
+
+  function updatePerson (name, number) {
+    const person = persons.filter(element => {
+      return element.name.toLowerCase() === name.toLowerCase()
+    })
+    phonebookService
+      .updatePerson(person[0].id, name, number)
+      .then(() => {
+        phonebookService
+          .getAll()
+          .then(response => {
+            setPersons(response.data);
+          })
+        // Clear input Fields
+        setNewName("");
+        setNewNumber("");
+      })
   }
 
   function handleRemove (e) {
