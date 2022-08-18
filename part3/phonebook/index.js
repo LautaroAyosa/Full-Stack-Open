@@ -1,5 +1,20 @@
+const { default: axios } = require('axios');
 const express = require('express');
+var fs = require('fs')
+var morgan = require('morgan')
+var path = require('path')
+
 const app = express()
+
+app.use(morgan(':method :url :status - :req[content-length] - :response-time ms :body'));
+morgan.token('host', function(req, res) {
+    return req.hostname;
+});
+morgan.token('body', (req, res) => JSON.stringify(req.body));
+morgan.token('param', function(req, res, param) {
+    return req.params[param];
+});
+
 
 let persons = [
     {
@@ -24,25 +39,43 @@ let persons = [
     }
 ]
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
+app.get('/', (req, res) => {
+  res.send('<h1>Hello World!</h1>')
 })
 
-app.get('/api/persons', (request, response) => {
-  response.json(persons)
+app.get('/api/persons', (req, res) => {
+  res.json(persons)
 })
 
-
-// app.get('/api/persons/:id', (request, response) => {
-//     response.json(persons[id])
-// })
-
-app.get('/info', (request, response) => {
-    var requestDate = new Date().toString();
-    response.send(`<p>Phonebook has infor for ${persons.length} people</p><p>${requestDate}</p>`)
+app.get('/api/persons/:id', (req, res) => {
+    let personId = req.params.id - 1;
+    if (persons[personId]) res.status(200).send(persons[personId])
+    else res.status(404).send('Error: Could not find that Person!' )
 })
+
+app.get('/info', (req, res) => {
+    var reqDate = new Date().toString();
+    res.send(`<p>Phonebook has infor for ${persons.length} people</p><p>${reqDate}</p>`)
+    res.status(404).send({ error: 'unknown endpoint' })
+})
+
+app.post('/api/persons', (req, res) => {
+    res.json(req)
+})
+
+app.delete('/api/persons/:id', (req, res) => {
+    var index = persons.findIndex((o) => {
+        return o.id === req.params.id;
+    })
+    if (index !== -1) {
+        persons.splice(index, 1);
+        res.send("DELETE req Called")
+    } else res.status(404).send('Error: Could not find that Person!' )
+})
+
 
 const PORT = 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+app.listen(PORT, (err) => {
+    if (err) console.log(err)
+    console.log(`Server running on port ${PORT}`)
 })
