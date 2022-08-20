@@ -1,19 +1,14 @@
-const { default: axios } = require('axios');
 const express = require('express');
-var fs = require('fs')
-var morgan = require('morgan')
-var path = require('path')
-
 const app = express()
+app.use(express.json())
 
-app.use(morgan(':method :url :status - :req[content-length] - :response-time ms :body'));
-morgan.token('host', function(req, res) {
-    return req.hostname;
-});
-morgan.token('body', (req, res) => JSON.stringify(req.body));
-morgan.token('param', function(req, res, param) {
-    return req.params[param];
-});
+var morgan = require('morgan')
+morgan.token("data", (request) => {
+    return request.method === "POST" ? JSON.stringify(request.body) : " ";
+  });
+app.use(
+morgan(":method :url :status :res[content-length] - :response-time ms :data")
+);
 
 
 let persons = [
@@ -44,13 +39,17 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+  res.status(200).json(persons)
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    let personId = req.params.id - 1;
-    if (persons[personId]) res.status(200).send(persons[personId])
-    else res.status(404).send('Error: Could not find that Person!' )
+    let id = Number(req.params.id);
+    const person = persons.find(person => person.id === id)
+    if (person) {
+        res.json(person)
+    } else {
+        res.status(404).send(`Error! The ID wasn't valid or we couldn't find the person`)
+    }
 })
 
 app.get('/info', (req, res) => {
@@ -59,19 +58,30 @@ app.get('/info', (req, res) => {
     res.status(404).send({ error: 'unknown endpoint' })
 })
 
-app.post('/api/persons', (req, res) => {
-    res.json(req)
+app.delete('/api/persons/:id', (req, res) => {
+    let id = Number(req.params.id);
+    const personsList = persons.filter(person => person.id !== id)
+    
+    response.status(204).send("DELETE req Called")
+    
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-    var index = persons.findIndex((o) => {
-        return o.id === req.params.id;
-    })
-    if (index !== -1) {
-        persons.splice(index, 1);
-        res.send("DELETE req Called")
-    } else res.status(404).send('Error: Could not find that Person!' )
+app.post('/api/persons', (req, res) => {
+    const {name, number} = req.body;
+    id = Math.round(Math.random() * 60000);
+
+    const newPerson = {
+        name: name,
+        number: number,
+        id: id
+    }
+
+    persons = [...persons, newPerson]
+    res.json({newPerson})
 })
+
+
+
 
 
 const PORT = 3001
