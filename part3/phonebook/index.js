@@ -60,7 +60,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   if (body === undefined) {
@@ -70,9 +70,11 @@ app.post('/api/persons', (req, res) => {
     name: body.name,
     number: body.number
   })
-  person.save().then(result => {
-    res.json(result)
-  })
+  person.save()
+    .then(result => {
+      res.json(result)
+    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -81,15 +83,15 @@ const unknownEndpoint = (request, response) => {
 // handler of requests with unknown endpoint
 app.use(unknownEndpoint)
 
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
-  }
-  next(error)
-}
-// Handler of errors
-app.use(errorHandler)
+// const errorHandler = (error, request, response, next) => {
+//   console.error(error.message)
+//   if (error.name === 'CastError') {
+//     return response.status(400).send({ error: 'malformatted id' })
+//   }
+//   next(error)
+// }
+// // Handler of errors
+// app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, (err) => {
