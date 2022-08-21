@@ -5,9 +5,9 @@ const morgan = require('morgan')
 const app = express()
 const Person = require('./models/person')
 
+app.use(cors())
 app.use(express.json())
 app.use(express.static('build'))
-app.use(cors())
 
 morgan.token('data', (request) => {
   return request.method === 'POST' ? JSON.stringify(request.body) : ' '

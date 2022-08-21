@@ -15,8 +15,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('');
-  const [ message, setMessage ] = useState("");
-  const [ isError, setIsError ] = useState(false);
+  const [ message, setMessage ] = useState(null);
 
   useEffect(() => {
     phonebookService
@@ -46,7 +45,7 @@ const App = () => {
             setPersons(persons.concat(response.data));
             setMessage(`Added ${newName} successfuly`)
             setTimeout(() => {
-              setMessage("")
+              setMessage(null)
             }, 5000)
             // Clear input Fields
             setNewName("");
@@ -54,11 +53,10 @@ const App = () => {
           })
           .catch(error => {
             setMessage(
-                `Error while creating ${newName}`
+                `Error! Error while creating ${newName}`
             )
-            setIsError(true)
             setTimeout(() => {
-              setMessage("")
+              setMessage(null)
             }, 5000)
         })
         
@@ -81,7 +79,7 @@ const App = () => {
             setPersons(response.data);
             setMessage(`Updated ${newName}'s number to ${newNumber} successfuly`)
             setTimeout(() => {
-              setMessage("")
+              setMessage(null)
             }, 5000)
           })
         // Clear input Fields
@@ -90,11 +88,10 @@ const App = () => {
       })
       .catch(error => {
         setMessage(
-            `Information of ${newName} has already been removed from the server`
+            `Error! Information of ${newName} has already been removed from the server`
         )
-        setIsError(true)
         setTimeout(() => {
-          setMessage("")
+          setMessage(null)
         }, 5000)
       })
   }
@@ -106,7 +103,7 @@ const App = () => {
         .then(response => {
           setMessage(`Removed number from the phonebook successfuly`)
           setTimeout(() => {
-            setMessage("")
+            setMessage(null)
           }, 5000)
           phonebookService
             .getAll()
@@ -116,11 +113,10 @@ const App = () => {
         })
         .catch(error => {
           setMessage(
-              `${newName} has already been deleted`
+              `Error! ${newName} has already been deleted`
           )
-          setIsError(true)
           setTimeout(() => {
-            setMessage("")
+            setMessage(null)
           }, 5000)
         })
     }
@@ -140,7 +136,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} isError={isError} />
+      <Notification message={message}/>
       <Filter
         label={"Filter shown with"}
         filter={filter}

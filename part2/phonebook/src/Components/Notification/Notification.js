@@ -1,23 +1,11 @@
 import React from 'react';
 
 const Notification = (props) => {
-
-
-    return (
-        <div>
-            {props.message === "" ? "" :
-                props.isError ? 
-                <div className='error'>
-                    {props.message}
-                </div> 
-                : 
-                <div className='success'>
-                    {props.message}
-                </div>
-            }
-        </div>
-        
-    );
+    if (props.message === null) return null;
+    else if (props.message.includes("Error!")) {
+        return <div className='error'>{props.message}</div> 
+    }
+    return <div className='success'>{props.message}</div>
 }
 
 export default Notification
