@@ -1,14 +1,14 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
-require('dotenv').config()
-
+const morgan = require('morgan')
 const app = express()
+const Person = require('./models/person')
+
 app.use(express.json())
 app.use(express.static('build'))
 app.use(cors())
-const Person = require('./models/person')
 
-const morgan = require('morgan')
 morgan.token('data', (request) => {
   return request.method === 'POST' ? JSON.stringify(request.body) : ' '
 })
@@ -16,19 +16,12 @@ app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :data')
 )
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
-})
-
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res, next) => {
   Person.find({})
     .then(persons => {
       res.json(persons)
     })
-    .catch(error => {
-      console.log(error)
-      res.status(500).end()
-    })
+    .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (req, res, next) => {
@@ -54,7 +47,7 @@ app.get('/info', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -102,6 +95,8 @@ const errorHandler = (error, request, response, next) => {
   console.error(error.message)
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
   next(error)
 }
