@@ -1,3 +1,4 @@
+const { orderBy } = require('lodash')
 const _ = require('lodash')
 
 const dummy = (blogs) => {
@@ -35,9 +36,35 @@ const mostBlogs = (blogs) => {
   }
 }
 
+const mostLikes = (blogs) => {
+  let mostLikedAuthor = ''
+  let likesCount = 0
+
+  const blogsByAuthor = _.groupBy(blogs, 'author')
+  Object.keys(blogsByAuthor).forEach(author => {
+    let likes = 0
+    let authorName = ''
+    Object.keys(author).forEach(blog => {
+      likes += blog.likes
+      authorName = blog.author
+    })
+    if (likes > likesCount) {
+      likesCount = likes
+      mostLikedAuthor = authorName
+    }
+    likes = 0
+  })
+
+  return {
+    author: mostLikedAuthor,
+    likes: likesCount
+  }
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
