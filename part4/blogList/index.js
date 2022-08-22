@@ -13,8 +13,14 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const mongoUrl = 'mongodb://localhost/bloglist'
+const mongoUrl = 'mongodb+srv://LautaroAyosa:amH6alQvTbPdVzTy@cluster0.3o0bakd.mongodb.net/cluster0?retryWrites=true&w=majority'
 mongoose.connect(mongoUrl)
+    .then(() => {
+        console.log('connected to MongoDB')
+    })
+    .catch((error) => {
+        console.log(error)
+    })
 
 app.use(cors())
 app.use(express.json())
