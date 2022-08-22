@@ -63,6 +63,29 @@ test('A valid blog can be added', async () => {
   )
 })
 
+test('Add likes=0 if the property likes is not passed', async () => {
+  const newBlog = {
+    title: 'How to Use Stereo Cameras to See in 3D!',
+    author: 'Andrew Blance',
+    url: 'https://medium.com/better-programming/how-to-use-stereo-cameras-to-see-in-3d-8dfd955a1824'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+  expect(blogsAtEnd[helper.initialBlogs.length]).toHaveProperty('likes', 0)
+
+  const titles = blogsAtEnd.map(r => r.title)
+  expect(titles).toContain(
+    'How to Use Stereo Cameras to See in 3D!'
+  )
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
