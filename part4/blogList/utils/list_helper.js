@@ -37,28 +37,19 @@ const mostBlogs = (blogs) => {
 }
 
 const mostLikes = (blogs) => {
-  let mostLikedAuthor = ''
-  let likesCount = 0
+  if (blogs.length === 0) return null
 
-  const blogsByAuthor = _.groupBy(blogs, 'author')
-  Object.keys(blogsByAuthor).forEach(author => {
-    let likes = 0
-    let authorName = ''
-    Object.keys(author).forEach(blog => {
-      likes += blog.likes
-      authorName = blog.author
-    })
-    if (likes > likesCount) {
-      likesCount = likes
-      mostLikedAuthor = authorName
-    }
-    likes = 0
+  const likesCount = _(blogs)
+    .groupBy('author')
+    .map((objs, key) => ({
+      author: key,
+      likes: _.sumBy(objs, 'likes')
+    }))
+    .value()
+
+  return likesCount.reduce((a, b) => {
+    return a.likes > b.likes ? a : b
   })
-
-  return {
-    author: mostLikedAuthor,
-    likes: likesCount
-  }
 }
 
 module.exports = {
