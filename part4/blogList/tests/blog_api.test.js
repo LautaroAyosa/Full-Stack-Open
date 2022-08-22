@@ -86,6 +86,38 @@ test('Add likes=0 if the property likes is not passed', async () => {
   )
 })
 
+test('Do not add blogs without a title', async () => {
+  const blogWithoutTitle = {
+    author: 'Andrew Blance',
+    url: 'https://medium.com/better-programming/how-to-use-stereo-cameras-to-see-in-3d-8dfd955a1824',
+    likes: 9
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutTitle)
+    .expect(400)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+})
+
+test('Do not add blogs without a URL', async () => {
+  const blogWithoutURL = {
+    title: 'How to Use Stereo Cameras to See in 3D!',
+    author: 'Andrew Blance',
+    likes: 9
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutURL)
+    .expect(400)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
