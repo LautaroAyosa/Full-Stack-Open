@@ -35,6 +35,11 @@ test('The blog list contains a title called TDD harms architecture', async () =>
   expect(titles).toContain('TDD harms architecture')
 })
 
+test("The unique identifying property of blog posts is called 'id' instead of '_id'", async () => {
+  const response = await api.get('/api/blogs')
+  expect(response.body[0]).toHaveProperty('id')
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
