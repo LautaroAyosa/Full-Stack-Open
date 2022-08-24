@@ -11,7 +11,7 @@ beforeEach(async () => {
   await User.deleteMany({})
 
   const passwordHash = await bcrypt.hash('sekret', 10)
-  const user = new User({ username: 'root', passwordHash })
+  const user = new User({ username: 'root', name: 'superuser', passwordHash })
 
   await user.save()
 })
@@ -53,6 +53,27 @@ describe('Adding a new User', () => {
     expect(usernames).toContain(newUser.username)
   })
 
+  test('Fails with statuscode 400 and message if username already taken', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'root',
+      name: 'Superuser',
+      password: 'salainen'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('`username` to be unique')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
   test('Fails with status code 400 - Username has less than 3 characters', async () => {
     const usersAtStart = await helper.usersInDb()
 
@@ -74,26 +95,26 @@ describe('Adding a new User', () => {
     expect(usernames).not.toContain(newUser.username)
   })
 
-  test('Fails with status code 400 - Password has less than 3 characters', async () => {
-    const usersAtStart = await helper.usersInDb()
+  // test('Fails with status code 400 - Password has less than 3 characters', async () => {
+  //   const usersAtStart = await helper.usersInDb()
 
-    const newUser = {
-      username: 'shortPassword',
-      name: 'Short Password User',
-      password: 'sa'
-    }
+  //   const newUser = {
+  //     username: 'shortPassword',
+  //     name: 'Short Password User',
+  //     password: 'sa'
+  //   }
 
-    await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(400)
+  //   await api
+  //     .post('/api/users')
+  //     .send(newUser)
+  //     .expect(400)
 
-    const usersAtEnd = await helper.usersInDb()
-    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  //   const usersAtEnd = await helper.usersInDb()
+  //   expect(usersAtEnd).toHaveLength(usersAtStart.length)
 
-    const usernames = usersAtEnd.map(u => u.username)
-    expect(usernames).not.toContain(newUser.username)
-  })
+  //   const usernames = usersAtEnd.map(u => u.username)
+  //   expect(usernames).not.toContain(newUser.username)
+  // })
 })
 
 afterAll(() => {
