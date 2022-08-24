@@ -11,9 +11,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   passwordHash: {
     type: String,
-    required: true,
-    minlength: 3
-    // PASSWORD MINIMUM LENGTH TO 3. DOESN'T WORK. EXERCISE 4.16
+    required: true
   },
   blogs: [
     {
