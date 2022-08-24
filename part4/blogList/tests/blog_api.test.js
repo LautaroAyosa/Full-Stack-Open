@@ -56,6 +56,14 @@ describe('Viewing a specific Blog', () => {
     expect(resultBlog.body).toEqual(processedBlog)
   })
 
+  test('Fails with status code 404 if id does not exist', async () => {
+    const nonExistingId = helper.nonExistingId()
+
+    await api
+      .get(`/api/blogs/${nonExistingId}`)
+      .expect(400)
+  })
+
   test('Fails with status code 400 if id is invalid', async () => {
     const invalidId = 'testid123'
 
