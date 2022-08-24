@@ -13,18 +13,8 @@ blogsRouter.get('/:id', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
   const blog = new Blog(request.body)
-  if (blog.title && blog.url) {
-    if (blog.likes) {
-      const result = await blog.save()
-      response.status(201).json(result)
-    } else {
-      blog.likes = 0
-      const result = await blog.save()
-      response.status(201).json(result)
-    }
-  } else {
-    response.status(400).send({ error: 'No Title or URL' })
-  }
+  const result = await blog.save()
+  response.status(201).json(result)
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
