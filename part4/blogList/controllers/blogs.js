@@ -1,3 +1,4 @@
+const config = require('../utils/config')
 const blogsRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
@@ -13,28 +14,30 @@ blogsRouter.get('/:id', async (req, res) => {
   res.json(blog)
 })
 
-blogsRouter.post('/', async (req, res) => {
-  const { title, author, url, likes } = req.body
-  const token = req.token
+blogsRouter.post('/', async (request, response) => {
+  const body = request.body
+  const token = request.token
+  const user = request.user
 
-  const decodedToken = jwt.verify(token, process.env.SECRET)
-  if (!token || !decodedToken.id) {
-    return res.status(401).json({ error: 'token missing or invalid' })
+  const decodedToken = jwt.verify(token, config.SECRET)
+  if (!(token && decodedToken.id)) {
+    return response.status(401).json({ error: 'token missing or invalid' })
   }
-  const user = await User.findById(decodedToken.id)
-
-  const blog = new Blog({
-    title,
-    author,
-    url,
-    likes,
+  console.log(user)
+  const blog = await new Blog({
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
     user: user._id
   }).populate('user', { username: 1, name: 1 })
 
   const savedBlog = await blog.save()
+
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-  res.status(201).json(savedBlog)
+
+  response.status(201).json(savedBlog.toJSON())
 })
 
 blogsRouter.delete('/:id', async (req, res) => {
@@ -49,12 +52,12 @@ blogsRouter.delete('/:id', async (req, res) => {
     res.status(404).send({ Error: 'This user does not own any blogs' })
   }
 
-  const blogToDelete = await Blog.find({ user: user._id, _id: req.params.id })
-  if (blogToDelete) {
-    const blog = await Blog.deleteOne({ user: user._id, _id: req.params.id })
-    res.status(204).json(blog)
+  const blogToDelete = await Blog.findById(req.params.id)
+  if (blogToDelete.user.toString() === user.id.toString()) {
+    await Blog.deleteOne({ _id: req.params.id })
+    res.status(204).end()
   } else {
-    res.status(400).send({ Error: 'Invalid ID' })
+    res.status(401).send({ Error: 'This blog does not belong to that user' })
   }
 })
 
