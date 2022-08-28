@@ -23,13 +23,12 @@ blogsRouter.post('/', async (request, response) => {
   if (!(token && decodedToken.id)) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
-  console.log(user)
   const blog = await new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: user._id
+    user: user.id
   }).populate('user', { username: 1, name: 1 })
 
   const savedBlog = await blog.save()
