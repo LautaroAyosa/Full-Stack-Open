@@ -36,7 +36,7 @@ describe('When there is initially one user in db', () => {
 })
 
 describe('Adding a new User', () => {
-  test('Succeeds with a fresh username', async () => {
+  test('Succeeds with statuscode 201 with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
