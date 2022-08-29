@@ -18,7 +18,7 @@ usersRouter.post('/', async (req, res) => {
   const { username, name, password } = req.body
 
   if (!(username && password)) {
-    return req.status(400).json({
+    return res.status(400).json({
       error: 'username and password are required'
     })
   }
@@ -51,11 +51,17 @@ usersRouter.post('/', async (req, res) => {
 })
 
 usersRouter.delete('/:id', async (req, res) => {
-  const deletedUser = await User.findByIdAndDelete(req.params.id)
-  if (!deletedUser) {
-    res.status(400).send({ error: 'No user found with that ID' })
+  const user = req.user
+  const foundUser = await User.findById(req.params.id)
+  if (foundUser) {
+    if (user.id === req.params.id) {
+      await User.findByIdAndDelete(req.params.id)
+      res.status(200).send({ Success: `User ${user.username} deleted successfuly` })
+    } else {
+      res.status(400).send({ error: 'You can\'t delete that user' })
+    }
   } else {
-    res.status(200).json(deletedUser)
+    res.status(400).send({ error: 'No user found with that ID' })
   }
 })
 
