@@ -124,55 +124,6 @@ describe('Adding a new User', () => {
   })
 })
 
-describe('Deleting an User', () => {
-  let token = null
-  beforeEach(async () => {
-    const user = {
-      username: 'LautaroAyosa',
-      password: 'anotherPassword'
-    }
-    token = await api
-      .post('/api/login/')
-      .send(user)
-      .expect(200)
-
-    token = 'bearer ' + token.stringify()
-  })
-
-  test('Delete user if Token is correct', async () => {
-    const usersAtStart = helper.usersInDb()
-    console.log(token)
-    console.log(usersAtStart)
-    // const decodedToken = jwt.verify(token, config.SECRET)
-    // await api
-    //   .delete(`/api/users/${userToDelete.id}`)
-    //   .set('Authentication', `bearer ${token}`)
-
-    // const usersAtEnd = helper.usersInDb
-    // expect(usersAtStart).toHaveLength(usersAtEnd.length - 1)
-
-  // const usernames = usersAtEnd.map(user => user.username)
-  // expect(usernames).not.toContain(userToDelete.username)
-  })
-
-  // test('Fail with status code 401 if the token is invalid', async () => {
-  //   token = null
-  //   const usersAtStart = helper.usersInDb
-  //   const userToDelete = User.find({ username: 'LautaroAyosa' })
-
-  //   await api
-  //     .delete(`/api/users/${userToDelete.id}`)
-  //     .set('Authentication', `bearer ${token}`)
-  //     .expect(401)
-
-  //   const usersAtEnd = helper.usersInDb
-  //   expect(usersAtStart).toHaveLength(usersAtEnd.lenght)
-
-  //   const usernames = usersAtEnd.map(user => user.username)
-  //   expect(usernames).toContain(userToDelete.username)
-  // })
-})
-
 afterAll(() => {
   mongoose.connection.close()
 })
