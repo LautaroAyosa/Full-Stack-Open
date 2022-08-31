@@ -145,6 +145,31 @@ describe('Adding a new Blog', () => {
     )
   })
 
+  test('Fails with status code 401 if no valid Token is passed', async () => {
+    const newBlog = {
+      title: 'How to Use Stereo Cameras to See in 3D!',
+      author: 'Andrew Blance',
+      url: 'https://medium.com/better-programming/how-to-use-stereo-cameras-to-see-in-3d-8dfd955a1824',
+      likes: 7
+    }
+
+    const token = null
+
+    await api
+      .post('/api/blogs')
+      .set({ Authorization: `bearer ${token}` })
+      .send(newBlog)
+      .expect(401)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+    const titles = blogsAtEnd.map(r => r.title)
+    expect(titles).not.toContain(
+      'How to Use Stereo Cameras to See in 3D!'
+    )
+  })
+
   test('Do not add blogs without a title', async () => {
     const blogWithoutTitle = {
       author: 'Andrew Blance',
