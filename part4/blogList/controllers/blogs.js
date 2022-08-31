@@ -1,8 +1,5 @@
-const config = require('../utils/config')
 const blogsRouter = require('express').Router()
-const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
-const User = require('../models/user')
 
 blogsRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -14,14 +11,13 @@ blogsRouter.get('/:id', async (req, res) => {
   res.json(blog)
 })
 
-blogsRouter.post('/', async (request, response) => {
-  const body = request.body
-  const token = request.token
-  const user = request.user
+blogsRouter.post('/', async (req, res) => {
+  const body = req.body
+  const token = req.token
+  const user = req.user
 
-  const decodedToken = jwt.verify(token, config.SECRET)
-  if (!(token && decodedToken.id)) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+  if (!token || !user) {
+    return res.status(401).json({ error: 'token missing or invalid' })
   }
   const blog = await new Blog({
     title: body.title,
@@ -36,17 +32,16 @@ blogsRouter.post('/', async (request, response) => {
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
-  response.status(201).json(savedBlog.toJSON())
+  res.status(201).json(savedBlog)
 })
 
 blogsRouter.delete('/:id', async (req, res) => {
   const token = req.token
+  const user = req.user
 
-  const decodedToken = jwt.verify(token, process.env.SECRET)
-  if (!token || !decodedToken.id) {
+  if (!token || !user) {
     return res.status(401).json({ error: 'token missing or invalid' })
   }
-  const user = await User.findById(decodedToken.id)
   if (!user.blogs) {
     res.status(404).send({ Error: 'This user does not own any blogs' })
   }
@@ -61,15 +56,29 @@ blogsRouter.delete('/:id', async (req, res) => {
 })
 
 blogsRouter.put('/:id', async (req, res) => {
+  const token = req.token
+  const user = req.user
   const { title, author, url, likes } = req.body
-  const blog = await Blog.findByIdAndUpdate(
-    req.params.id, {
+
+  if (!token || !user) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+  if (!user.blogs) {
+    res.status(404).send({ Error: 'This user does not own any blogs' })
+  }
+
+  const blogToUpdate = await Blog.findById(req.params.id)
+  if (blogToUpdate.user.toString() === user.id.toString()) {
+    await Blog.updateOne(blogToUpdate, {
       title,
       author,
       url,
       likes
     })
-  res.send(`Blog '${blog.title}' has been updated`)
+    res.status(204).end()
+  } else {
+    res.status(401).send({ Error: 'This blog does not belong to that user' })
+  }
 })
 
 module.exports = blogsRouter
