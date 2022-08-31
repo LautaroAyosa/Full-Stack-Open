@@ -203,16 +203,38 @@ describe('Adding a new Blog', () => {
 })
 
 describe('Deletion of a blog', () => {
+  beforeEach(async () => {
+    const user = {
+      username: 'root',
+      password: 'sekret'
+    }
+    const loggedInUser = await api
+      .post('/api/login')
+      .send(user)
+      .expect(200)
+
+    const blog = {
+      title: 'blog de prueba para borrar',
+      author: 'Root User',
+      url: 'https://asd',
+      like: 8965
+    }
+    await api
+      .post('/api/blogs/')
+      .set({ Authorization: `bearer ${loggedInUser.body.token}` })
+      .send(blog)
+      .expect(201)
+  })
+
   test('Succeeds with a status 204 if id is valid', async () => {
-    const blogsAtStart = helper.initialBlogs
+    const blogsAtStart = await helper.blogsInDb()
 
     const user = {
       username: 'root',
       password: 'sekret'
     }
-
-    const userData = await User.find({ username: user.username })
-    const blogToDelete = await Blog.findOne({ user: userData.id })
+    const userData = await User.findOne({ username: user.username })
+    const blogToDelete = await Blog.findOne({ user: userData.id.toString() })
 
     const loggedInUser = await api
       .post('/api/login')
@@ -228,22 +250,49 @@ describe('Deletion of a blog', () => {
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
 
-    const contents = blogsAtEnd.map(blog => blog.content)
-
-    expect(contents).not.toContain(blogToDelete)
+    const titles = blogsAtEnd.map(blog => blog.title)
+    expect(titles).not.toContain(blogToDelete.title)
   })
 
-  // test('Fails with status code 400 if id is invalid', async () => {
-  //   const blogsAtStart = await helper.blogsInDb()
-  //   const invalidId = 'testid123'
+  test('Fails with status code 401 if no token is provided', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const invalidId = 'testid123'
 
-  //   await api
-  //     .delete(`/api/blogs/${invalidId}`)
-  //     .expect(400)
+    await api
+      .delete(`/api/blogs/${invalidId}`)
+      .expect(401)
 
-  //   const blogsAtEnd = await helper.blogsInDb()
-  //   expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
-  // })
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+  })
+
+  test('Fails with status code 400 if id is invalid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+
+    const user = {
+      username: 'root',
+      password: 'sekret'
+    }
+    const userData = await User.findOne({ username: user.username })
+    const blogToDelete = await Blog.findOne({ user: userData.id.toString() })
+
+    const loggedInUser = await api
+      .post('/api/login')
+      .send(user)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    await api
+      .delete('/api/blogs/asdas1243124saqwd2134sa')
+      .set({ Authorization: `bearer ${loggedInUser.body.token}` })
+      .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+
+    const titles = blogsAtEnd.map(blog => blog.title)
+    expect(titles).toContain(blogToDelete.title)
+  })
 })
 
 afterAll(() => {
