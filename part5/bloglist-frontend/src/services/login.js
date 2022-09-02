@@ -6,5 +6,10 @@ const login = async credentials => {
   return response.data
 }
 
+const logout = () => {
+    window.localStorage.removeItem('loggedUser')
+    window.location.reload()
+}
+
 // eslint-disable-next-line
-export default { login }
+export default { login, logout }

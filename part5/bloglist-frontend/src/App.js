@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Login from './components/Login/Login'
-import Blogs from './components/Blogs/Blogs'
+import BlogsList from './components/Blogs/BlogsList/BlogsList'
+import CreateBlogs from './components/Blogs/CreateBlogs/CreateBlogs'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -19,7 +20,8 @@ const App = () => {
 
   return (
     <div>
-      <Blogs user={user}/>
+      <CreateBlogs />
+      <BlogsList user={user}/>
     </div>
   )
 }
