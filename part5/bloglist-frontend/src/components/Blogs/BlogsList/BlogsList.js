@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import blogService from "../../services/blogs"
-import loginService from "../../services/login"
+import blogService from "../../../services/blogs"
+import loginService from "../../../services/login"
 import Blog from "./Blog/Blog";
 
-const Blogs = (props) => {
+const BlogsList = (props) => {
     const [blogs, setBlogs] = useState([])
 
     useEffect(() => {
@@ -22,4 +22,4 @@ const Blogs = (props) => {
     )
 }
 
-export default Blogs
+export default BlogsList

@@ -1,15 +1,19 @@
 import {useState} from 'react'
-import LoginButton from "../LoginButton/LoginButton"
+import LoginButton from "./LoginButton/LoginButton"
 
 const LoginForm = () => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [user, setUser] = useState({ username: "", password: ""});
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setUser({ ...user, [name]: value });
+    };
 
     return (
         <form>
-            <input placeholder='Username' onChange={({ target }) => setUsername(target.value)} value={username} />
-            <input placeholder='Password' onChange={({ target }) => setPassword(target.value)} value={password} />
-            <LoginButton username={username} password={password}/>
+            <input placeholder='Username' onChange={handleInputChange} value={user.username} name='username' />
+            <input placeholder='Password' onChange={handleInputChange} value={user.password} name='password' />
+            <LoginButton user={user} setUser={setUser}/>
         </form>
     )
 }
