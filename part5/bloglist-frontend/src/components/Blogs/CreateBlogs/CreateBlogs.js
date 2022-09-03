@@ -1,6 +1,6 @@
 import CreateBlogsForm from './CreateBlogsForm/CreateBlogsForm'
 
-const CreateBlogs = () => {
+const CreateBlogs = (props) => {
 
     return (
         <div>

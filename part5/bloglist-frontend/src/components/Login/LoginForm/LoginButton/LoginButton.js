@@ -1,5 +1,4 @@
 import loginService from "../../../../services/login"
-import blogsService from "../../../../services/blogs"
 
 const LoginButton = (props) => {
     const handleSubmit = async (e) => {
@@ -10,7 +9,6 @@ const LoginButton = (props) => {
         })
         
         if (user) {
-            blogsService.setToken(user.token)
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
             window.location.reload()
         } else {

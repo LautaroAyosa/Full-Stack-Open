@@ -1,7 +1,7 @@
 import axios from 'axios'
 const baseUrl = '/api/blogs'
 
-let token = null;
+let token = '';
 
 const setToken = newToken => {
   token = `bearer ${newToken}`
@@ -17,7 +17,6 @@ const createBlog = async newBlog => {
     headers: { Authorization: token },
   }
 
-  console.log(config)
   const response = await axios.post(baseUrl, newBlog, config )
   return response.data
 }
