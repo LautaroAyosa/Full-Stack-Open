@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import CreateBlogsFormButton from "./CreateBlogsFormButton/CreateBlogsFormButton"
 
-const CreateBlogsForm = () => {
+const CreateBlogsForm = (props) => {
     const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
 
     const handleInputChange = (event) => {
