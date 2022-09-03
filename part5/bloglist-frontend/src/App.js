@@ -3,14 +3,22 @@ import blogService from "./services/blogs"
 import Login from './components/Login/Login'
 import BlogsList from './components/Blogs/BlogsList/BlogsList'
 import CreateBlogs from './components/Blogs/CreateBlogs/CreateBlogs'
+import Notification from './components/Notification/Notification'
 
 const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
+  const [ message, setMessage ] = useState(null);
 
   useEffect(() => {
       blogService.getAll().then((blogs) => setBlogs(blogs));
-    }, []);
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }, [message])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -26,7 +34,8 @@ const App = () => {
 
   return (
     <div>
-      <CreateBlogs blogs={blogs} setBlogs={setBlogs} />
+      <Notification message={message}/>
+      <CreateBlogs blogs={blogs} setBlogs={setBlogs} message={message} setMessage={setMessage} />
       <BlogsList user={user} blogs={blogs}/>
     </div>
   )
