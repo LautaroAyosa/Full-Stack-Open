@@ -5,7 +5,6 @@ const BlogsList = (props) => {
 
     return (
         <div>
-            <h2>Blogs</h2>
             <p>
                 {props.user.name} logged in 
                 <button onClick={async() => await loginService.logout()}>Log out</button>
