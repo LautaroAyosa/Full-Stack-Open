@@ -14,7 +14,7 @@ const CreateBlogsForm = (props) => {
             <input placeholder="Title" onChange={handleInputChange} value={newBlog.title} name='title' />
             <input placeholder="Author" onChange={handleInputChange} value={newBlog.author} name='author' />
             <input placeholder="URL" onChange={handleInputChange} value={newBlog.url} name='url'/>
-            <CreateBlogsFormButton newBlog={newBlog} setNewBlog={setNewBlog} />
+            <CreateBlogsFormButton newBlog={newBlog} setNewBlog={setNewBlog} setMessage={props.setMessage} blogs={props.blogs} setBlogs={props.setBlogs} />
         </form>
     )
 }

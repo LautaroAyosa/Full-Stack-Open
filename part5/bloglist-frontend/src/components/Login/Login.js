@@ -1,11 +1,11 @@
 import LoginForm from './LoginForm/LoginForm'
 
-const Login = () => {
+const Login = (props) => {
 
     return (
         <div>
             <h2>Log in to application</h2>
-            <LoginForm/>
+            <LoginForm setMessage={props.setMessage} />
         </div>
     )
 }

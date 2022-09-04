@@ -4,6 +4,7 @@ import Login from './components/Login/Login'
 import BlogsList from './components/Blogs/BlogsList/BlogsList'
 import CreateBlogs from './components/Blogs/CreateBlogs/CreateBlogs'
 import Notification from './components/Notification/Notification'
+import './App.css'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -17,7 +18,7 @@ const App = () => {
   useEffect(() => {
     setTimeout(() => {
       setMessage(null)
-    }, 5000)
+    }, 8000)
   }, [message])
 
   useEffect(() => {
@@ -29,13 +30,18 @@ const App = () => {
   }, [])
 
   if ( user === null ) {
-    return <Login />
+    return (
+      <div>
+        <Notification message={message}/>
+        <Login setMessage={setMessage} />
+      </div>
+    )
   }
 
   return (
     <div>
       <Notification message={message}/>
-      <CreateBlogs blogs={blogs} setBlogs={setBlogs} message={message} setMessage={setMessage} />
+      <CreateBlogs blogs={blogs} setBlogs={setBlogs} setMessage={setMessage} />
       <BlogsList user={user} blogs={blogs}/>
     </div>
   )
