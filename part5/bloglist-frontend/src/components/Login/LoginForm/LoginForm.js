@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import LoginButton from "./LoginButton/LoginButton"
 
-const LoginForm = () => {
+const LoginForm = (props) => {
     const [user, setUser] = useState({ username: "", password: ""});
 
     const handleInputChange = (event) => {
@@ -13,7 +13,7 @@ const LoginForm = () => {
         <form>
             <input placeholder='Username' onChange={handleInputChange} value={user.username} name='username' />
             <input placeholder='Password' onChange={handleInputChange} value={user.password} name='password' />
-            <LoginButton user={user} setUser={setUser}/>
+            <LoginButton user={user} setUser={setUser} setMessage={props.setMessage} />
         </form>
     )
 }

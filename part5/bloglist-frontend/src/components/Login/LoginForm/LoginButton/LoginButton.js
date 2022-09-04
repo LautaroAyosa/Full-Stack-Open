@@ -3,15 +3,15 @@ import loginService from "../../../../services/login"
 const LoginButton = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const user = await loginService.login({
-            username: props.user.username,
-            password: props.user.password
-        })
-        
-        if (user) {
+        try {
+            const user = await loginService.login({
+                username: props.user.username,
+                password: props.user.password
+            })
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
             window.location.reload()
-        } else {
+        } catch(err) {
+            props.setMessage(`Error! Incorrect Username or Password`)
             props.setUser({username: '', password: ''})
         }
     }

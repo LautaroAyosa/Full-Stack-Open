@@ -5,7 +5,7 @@ const CreateBlogs = (props) => {
     return (
         <div>
             <h2>Create New</h2>
-            <CreateBlogsForm />
+            <CreateBlogsForm setMessage={props.setMessage} blogs={props.blogs} setBlogs={props.setBlogs} />
         </div>
     )
 }
