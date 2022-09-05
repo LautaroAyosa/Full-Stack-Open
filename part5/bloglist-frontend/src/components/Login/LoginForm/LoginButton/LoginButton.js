@@ -1,4 +1,5 @@
 import loginService from "../../../../services/login"
+import blogService from '../../../../services/blogs'
 
 const LoginButton = (props) => {
     const handleSubmit = async (e) => {
@@ -9,6 +10,7 @@ const LoginButton = (props) => {
                 password: props.user.password
             })
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
+            blogService.setToken(user.token)
             window.location.reload()
         } catch(err) {
             props.setMessage(`Error! Incorrect Username or Password`)

@@ -17,3 +17,28 @@
     padding: 10px;
     margin-bottom: 10px;
 }
+
+.singleBlogContainer {
+    margin: 5px;
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: gainsboro;
+}
+.singleBlogHeader {
+    display: flex;
+}
+.singleBlogItem {
+    margin: 5px 5px;
+    line-height: 22px;
+}
+.singleBlogTogglable {
+    background-color: rgb(189, 189, 189);
+    padding: 5px;
+}
+.singleBlogContent p:first-child {
+    margin-top: 0px !important;
+}
+.likes button {
+    margin-left: 5px;
+}
