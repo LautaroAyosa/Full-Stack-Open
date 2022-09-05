@@ -18,12 +18,15 @@
     margin-bottom: 10px;
 }
 
-.singleBlog {
+.singleBlogContainer {
     margin: 5px;
     padding: 5px 10px;
     display: flex;
     flex-direction: column;
     background-color: gainsboro;
+}
+.singleBlogHeader {
+    display: flex;
 }
 .singleBlogItem {
     margin: 5px 5px;

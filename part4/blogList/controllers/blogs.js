@@ -71,17 +71,13 @@ blogsRouter.put('/:id', async (req, res) => {
   }
 
   const blogToUpdate = await Blog.findById(req.params.id)
-  if (blogToUpdate.user.toString() === user.id.toString()) {
-    await Blog.updateOne(blogToUpdate, {
-      title,
-      author,
-      url,
-      likes
-    })
-    res.status(204).end()
-  } else {
-    res.status(401).send({ Error: 'This blog does not belong to that user' })
-  }
+  await Blog.updateOne(blogToUpdate, {
+    title,
+    author,
+    url,
+    likes
+  })
+  res.status(204).end()
 })
 
 module.exports = blogsRouter
