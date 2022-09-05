@@ -46,7 +46,7 @@ const App = () => {
       <Togglable buttonLabel='Add new Blog'>
         <CreateBlogs blogs={blogs} setBlogs={setBlogs} setMessage={setMessage} />
       </Togglable>
-      <BlogsList user={user} blogs={blogs} setBlogs={setBlogs}/>
+      <BlogsList user={user} blogs={blogs} setBlogs={setBlogs} setMessage={setMessage}/>
     </div>
   )
 }

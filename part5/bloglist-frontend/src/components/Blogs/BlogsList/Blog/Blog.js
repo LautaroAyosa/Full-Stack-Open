@@ -8,10 +8,22 @@ const Blog = (props) => {
     setVisible(!visible);
   };
 
-  const handleClick = async (e) => {
+  const handleLikeButton = async (e) => {
     e.preventDefault()
     await blogService.setToken(JSON.parse(window.localStorage.getItem('loggedUser')).token)
     await blogService.update(props.blog.id, {likes: props.blog.likes + 1})
+  }
+
+  const handleDelete = async (e) => {
+    e.preventDefault()
+    try {
+      await blogService.setToken(JSON.parse(window.localStorage.getItem('loggedUser')).token)
+      await blogService.remove(props.blog.id)
+      props.setMessage(`${props.blog.title} deleted successfuly`)
+    } catch (err) {
+      props.setMessage(`Error! ${err.response.data.Error}`)
+      console.log(err.response.data.Error)
+    }
   }
 
   return (
@@ -27,7 +39,10 @@ const Blog = (props) => {
         <p className="singleBlogItem url">URL: {props.blog.url}</p>
         <p className="singleBlogItem likes">
           Likes: {props.blog.likes}
-          <button onClick={handleClick}>Like</button>
+          <button onClick={handleLikeButton}>Like</button>
+        </p>
+        <p className="singleBlogItem remove">
+          <button onClick={handleDelete}>Remove</button>
         </p>
       </div>
       )}
