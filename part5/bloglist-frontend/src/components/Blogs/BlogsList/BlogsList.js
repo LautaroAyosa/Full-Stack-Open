@@ -15,7 +15,8 @@ const BlogsList = (props) => {
                     <Blog 
                         key={blog.id} 
                         blog={blog} 
-                        setBlogs={props.setBlogs} 
+                        setBlogs={props.setBlogs}
+                        setMessage={props.setMessage}
                     />
                 ))
             }
