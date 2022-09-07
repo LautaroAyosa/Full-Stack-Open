@@ -17,14 +17,30 @@ const Blog = (props) => {
   const handleDelete = async (e) => {
     e.preventDefault()
     try {
-      await blogService.setToken(JSON.parse(window.localStorage.getItem('loggedUser')).token)
-      await blogService.remove(props.blog.id)
-      props.setMessage(`${props.blog.title} deleted successfuly`)
+      if(window.confirm(`Are you sure you want to remove "${props.blog.title}" by ${props.blog.author}?`)) {
+        await blogService.setToken(JSON.parse(window.localStorage.getItem('loggedUser')).token)
+        await blogService.remove(props.blog.id)
+        props.setMessage(`${props.blog.title} deleted successfuly`)
+      }
     } catch (err) {
       props.setMessage(`Error! ${err.response.data.Error}`)
       console.log(err.response.data.Error)
     }
   }
+
+  const isFromThisUser = () => {
+
+    if (props.blog.user) {
+      let loggedUserName = JSON.parse(window.localStorage.getItem('loggedUser')).username
+      let blogUserName = props.blog.user.username
+      if(  blogUserName === loggedUserName) {
+        return true
+      }
+    }
+    return false
+  }
+
+  console.log(props.blog)
 
   return (
     <div className="singleBlogContainer">
@@ -41,9 +57,12 @@ const Blog = (props) => {
           Likes: {props.blog.likes}
           <button onClick={handleLikeButton}>Like</button>
         </p>
-        <p className="singleBlogItem remove">
-          <button onClick={handleDelete}>Remove</button>
-        </p>
+        { isFromThisUser() ? 
+          <p className="singleBlogItem remove">
+            <button onClick={handleDelete}>Remove</button>
+          </p> : ''
+        }
+        
       </div>
       )}
     </div>
