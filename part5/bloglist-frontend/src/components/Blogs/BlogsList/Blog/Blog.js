@@ -40,8 +40,6 @@ const Blog = (props) => {
     return false
   }
 
-  console.log(props.blog)
-
   return (
     <div className="singleBlogContainer">
       <div className='singleBlogHeader'>
