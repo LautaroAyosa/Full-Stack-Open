@@ -29,7 +29,7 @@ const Blog = (props) => {
   }
 
   const isFromThisUser = () => {
-    if (props.blog.user) {
+    if (props.blog.user && window.localStorage.getItem('loggedUser')) {
       const loggedUserName = JSON.parse(window.localStorage.getItem('loggedUser')).username
       const blogUserName = props.blog.user.username
       if (blogUserName === loggedUserName) {
@@ -57,8 +57,8 @@ const Blog = (props) => {
         </p>
         { isFromThisUser()
           ? <p className="singleBlogItem remove">
-            <button onClick={handleDelete}>Remove</button>
-          </p>
+              <button onClick={handleDelete}>Remove</button>
+            </p>
           : ''
         }
 
