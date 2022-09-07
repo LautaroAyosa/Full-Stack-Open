@@ -1,7 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
-import { prettyDOM } from '@testing-library/dom'
 import Blog from './Blog'
 
 describe('BLOG CONTENT', () => {
@@ -17,38 +16,52 @@ describe('BLOG CONTENT', () => {
     }
   }
 
-  test('Blog DOESN\'T show likes and url before show button is pressed', () => {
-    const component = render(
-          <Blog blog={blog} />
+  let component
+  const showMockHandler = jest.fn()
+  const likeMockHandler = jest.fn()
+
+  beforeEach(() => {
+    component = render(
+      <Blog key={blog.id} blog={blog} toggleVisibility={showMockHandler} handleLikeButton={likeMockHandler} />
     )
-
-    const title = component.container.querySelector('.title strong')
-    const author = component.container.querySelector('.title')
-    const likes = component.container.querySelector('.likes')
-    const url = component.container.querySelector('.url')
-
-    expect(title).toHaveTextContent('Some Test Blog')
-    expect(author).toHaveTextContent('Franco Poggio')
-    expect(likes).toBe(null)
-    expect(url).toBe(null)
   })
 
-  test('Blog DOES show likes and url after show button is pressed', () => {
-    const component = render(
-            <Blog blog={blog} />
-    )
+  test('Blog DOESN\'T render likes and url before show button is pressed', () => {
+    expect(component.container.querySelector('.title strong')).toHaveTextContent(blog.title)
+    expect(component.container.querySelector('.title')).toHaveTextContent(blog.author)
+    expect(component.container.querySelector('.likes')).toBe(null)
+    expect(component.container.querySelector('.url')).toBe(null)
+  })
 
-    const showButton = component.getByText('show')
+  test('At start Single Blog Content is not rendered', () => {
+    const div = component.container.querySelector('.singleBlogContent')
+    expect(div).toBe(null)
+  })
+
+  test('click event on "show" button ONCE and SHOW Single Blog Content', () => {
+    const showButton = component.container.querySelector('#view-btn')
+    fireEvent.click(showButton)
+    const singleContent = component.container.querySelector('.singleBlogContent')
+    expect(singleContent).toBeInTheDocument()
+  })
+  test('click event on "show" button TWICE and HIDE Single Blog Content', () => {
+    const showButton = component.container.querySelector('#view-btn')
+    fireEvent.click(showButton)
     fireEvent.click(showButton)
 
-    const title = component.container.querySelector('.title strong')
-    const author = component.container.querySelector('.title')
-    const likes = component.container.querySelector('.likes')
-    const url = component.container.querySelector('.url')
-
-    expect(title).toHaveTextContent('Some Test Blog')
-    expect(author).toHaveTextContent('Franco Poggio')
-    expect(likes).toHaveTextContent('Likes: 9')
-    expect(url).toHaveTextContent('URL:')
+    const singleContent = component.container.querySelector('.singleBlogContent')
+    expect(singleContent).not.toBeInTheDocument()
   })
+
+  //   test('click on like button', () => {
+  //     const showButton = component.container.querySelector('#view-btn')
+  //     fireEvent.click(showButton)
+  //     expect(component.container.querySelector('.likes')).toHaveTextContent(`Likes: ${blog.likes}`)
+
+//     const likeButton = component.container.querySelector('#singleBlogItemLikeButton')
+//     fireEvent.click(likeButton)
+//     expect(component.container.querySelector('.likes')).toHaveTextContent(`Likes: ${blog.likes + 1}`)
+//     fireEvent.click(likeButton)
+//     expect(component.container.querySelector('.likes')).toHaveTextContent(`Likes: ${blog.likes + 2}`)
+//   })
 })

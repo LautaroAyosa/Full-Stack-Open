@@ -3,6 +3,7 @@ import blogService from '../../../../services/blogs'
 
 const Blog = (props) => {
   const [visible, setVisible] = useState(false)
+  const [likes, setLikes] = useState(props.blog.likes)
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -12,6 +13,7 @@ const Blog = (props) => {
     e.preventDefault()
     await blogService.setToken(JSON.parse(window.localStorage.getItem('loggedUser')).token)
     await blogService.update(props.blog.id, { likes: props.blog.likes + 1 })
+    setLikes(likes + 1)
   }
 
   const handleDelete = async (e) => {
@@ -52,8 +54,8 @@ const Blog = (props) => {
       <div className='singleBlogContent'>
         <p className="singleBlogItem url">URL: {props.blog.url}</p>
         <p className="singleBlogItem likes">
-          Likes: {props.blog.likes}
-          <button onClick={handleLikeButton}>Like</button>
+          Likes: {likes}
+          <button onClick={handleLikeButton} id='singleBlogItemLikeButton'>Like</button>
         </p>
         { isFromThisUser()
           ? <p className="singleBlogItem remove">
