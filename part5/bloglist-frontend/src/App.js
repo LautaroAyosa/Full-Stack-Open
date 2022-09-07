@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import blogService from "./services/blogs"
+import blogService from './services/blogs'
 import Login from './components/Login/Login'
 import BlogsList from './components/Blogs/BlogsList/BlogsList'
 import CreateBlogs from './components/Blogs/CreateBlogs/CreateBlogs'
@@ -10,11 +10,11 @@ import './App.css'
 const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
-      blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    blogService.getAll().then((blogs) => setBlogs(blogs))
+  }, [])
 
   useEffect(() => {
     setTimeout(() => {
@@ -30,7 +30,7 @@ const App = () => {
     }
   }, [])
 
-  if ( user === null ) {
+  if (user === null) {
     return (
       <div>
         <Notification message={message}/>
